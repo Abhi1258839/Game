@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Test Match Scorer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style_home.css">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="home.js" defer></script>
+</head>
+<body class="scorer-page">
+    <div class="stadium-glow"></div>
+
+    <header class="app-topbar">
+        <a class="brand-mark" href="index.html">
+            <span>AJ</span>
+            <strong>Cricket Lab</strong>
+        </a>
+        <div class="topbar-actions">
+            <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle theme"><i data-lucide="moon"></i></button>
+            <button id="ambienceToggle" class="icon-button" type="button" aria-label="Toggle ambience"><i data-lucide="volume-2"></i></button>
+            <button id="saveMatch" class="control-button" type="button"><i data-lucide="save"></i>Save</button>
+            <button id="loadMatch" class="control-button ghost" type="button"><i data-lucide="download"></i>Load</button>
+            <button id="exportScorecard" class="control-button ghost" type="button"><i data-lucide="file-image"></i>Export</button>
+        </div>
+    </header>
+
+    <div class="live-ticker">
+        <span class="live-dot"></span>
+        <p id="tickerText">Ready for toss. Configure the teams and start the match.</p>
+    </div>
+
+    <main class="score-app">
+        <section class="score-hero">
+            <div>
+                <p class="eyebrow">International Test Match</p>
+                <h1 id="matchTitle">Knights vs Titans</h1>
+                <p id="matchSubTitle">Day 1 - Morning Session - Pitch: Balanced - Weather: Sunny</p>
+            </div>
+            <div class="score-ribbon big">
+                <span id="battingBadge">KNI</span>
+                <strong id="scoreMain">0/0</strong>
+                <small id="oversMain">0.0 ov</small>
+            </div>
+        </section>
+
+        <section class="quick-strip">
+            <article>
+                <p>Run Rate</p>
+                <strong id="runRate">0.00</strong>
+            </article>
+            <article>
+                <p>Required RR</p>
+                <strong id="requiredRate">--</strong>
+            </article>
+            <article>
+                <p>Partnership</p>
+                <strong id="partnershipText">0 (0)</strong>
+            </article>
+            <article>
+                <p>Win Probability</p>
+                <strong id="winProbability">50%</strong>
+            </article>
+            <article>
+                <p>Prediction AI</p>
+                <strong id="predictionText">Even contest</strong>
+            </article>
+        </section>
+
+        <section class="workspace-grid">
+            <aside class="setup-panel panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Setup</p>
+                        <h2>Teams & Toss</h2>
+                    </div>
+                    <button id="resetMatch" class="icon-button danger" type="button" aria-label="Reset match"><i data-lucide="rotate-ccw"></i></button>
+                </div>
+
+                <div class="team-config">
+                    <label>Team 1 name<input id="teamAName" type="text"></label>
+                    <label>Logo text<input id="teamALogo" type="text" maxlength="3"></label>
+                    <label>Team 2 name<input id="teamBName" type="text"></label>
+                    <label>Logo text<input id="teamBLogo" type="text" maxlength="3"></label>
+                </div>
+
+                <div class="toss-grid">
+                    <label>Toss winner<select id="tossWinner"></select></label>
+                    <label>Decision<select id="tossDecision"><option>Bat</option><option>Bowl</option></select></label>
+                    <label>Day<select id="daySelect"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+                    <label>Session<select id="sessionSelect"><option>Morning</option><option>Afternoon</option><option>Evening</option></select></label>
+                </div>
+
+                <div class="innings-tabs" id="inningsTabs"></div>
+
+                <details class="players-drawer">
+                    <summary>Playing XI Editor</summary>
+                    <div class="player-lists">
+                        <label><span id="teamALabel">Knights XI</span><textarea id="teamAPlayers" rows="11"></textarea></label>
+                        <label><span id="teamBLabel">Titans XI</span><textarea id="teamBPlayers" rows="11"></textarea></label>
+                    </div>
+                    <button id="applyTeams" class="control-button full" type="button"><i data-lucide="users"></i>Apply Teams</button>
+                </details>
+            </aside>
+
+            <section class="panel scoring-panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Live Scoring</p>
+                        <h2 id="inningsName">1st Innings</h2>
+                    </div>
+                    <button id="undoBall" class="control-button ghost" type="button"><i data-lucide="undo-2"></i>Undo Last Ball</button>
+                </div>
+
+                <div class="score-controls">
+                    <label>Batsman<select id="batsmanSelect"></select></label>
+                    <label>Bowler<select id="bowlerSelect"></select></label>
+                    <label>Runs<input id="runsInput" type="number" min="0" max="6" value="0"></label>
+                    <label>Balls<input id="ballsInput" type="number" min="0" max="1" value="1"></label>
+                    <label>4s<input id="foursInput" type="number" min="0" max="1" value="0"></label>
+                    <label>6s<input id="sixesInput" type="number" min="0" max="1" value="0"></label>
+                    <label>Wicket<select id="wicketType">
+                        <option value="">No wicket</option>
+                        <option>Bowled</option>
+                        <option>Caught</option>
+                        <option>LBW</option>
+                        <option>Run out</option>
+                        <option>Stumped</option>
+                        <option>Hit wicket</option>
+                        <option>Retired hurt</option>
+                    </select></label>
+                </div>
+
+                <div class="extras-grid">
+                    <label>Wides<input id="widesInput" type="number" min="0" value="0"></label>
+                    <label>No balls<input id="noballsInput" type="number" min="0" value="0"></label>
+                    <label>Byes<input id="byesInput" type="number" min="0" value="0"></label>
+                    <label>Leg byes<input id="legbyesInput" type="number" min="0" value="0"></label>
+                </div>
+
+                <div class="action-row">
+                    <button id="addBall" class="primary-action" type="button"><i data-lucide="plus-circle"></i>Add Ball</button>
+                    <button id="addManualComment" class="control-button ghost" type="button"><i data-lucide="message-square"></i>Add Commentary</button>
+                </div>
+
+                <div class="mini-scoreboard">
+                    <div id="battersTable"></div>
+                    <div id="bowlersTable"></div>
+                </div>
+            </section>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Momentum</p>
+                        <h2>Score Worm</h2>
+                    </div>
+                    <span id="scoreHistoryLabel">0 events</span>
+                </div>
+                <div id="scoreWorm" class="score-worm"></div>
+            </article>
+
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Shot Map</p>
+                        <h2>Wagon Wheel</h2>
+                    </div>
+                    <span id="boundaryBadge">0 boundaries</span>
+                </div>
+                <div id="wagonWheel" class="wagon-wheel"></div>
+            </article>
+
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Timeline</p>
+                        <h2>Fall of Wickets</h2>
+                    </div>
+                </div>
+                <div id="fowTimeline" class="timeline"></div>
+            </article>
+
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Broadcast</p>
+                        <h2>Ball-by-Ball</h2>
+                    </div>
+                </div>
+                <div id="commentaryList" class="commentary-list"></div>
+            </article>
+        </section>
+
+        <section class="dashboard-grid lower">
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Records</p>
+                        <h2>Leaderboards</h2>
+                    </div>
+                </div>
+                <div id="leaderboards" class="leaderboards"></div>
+            </article>
+
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Awards</p>
+                        <h2>Player of the Match</h2>
+                    </div>
+                </div>
+                <label>Selector<select id="potmSelect"></select></label>
+                <div id="potmCard" class="potm-card"></div>
+            </article>
+        </section>
+    </main>
+</body>
+</html>
